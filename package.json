@@ -1,8 +1,8 @@
 {
 	"name": "sberzvuk-api",
 	"description": "Библиотека для взаимодействия с API музыкальной платформы «СберЗвук»",
-	"version": "1.5.13",
-	"main": "index.js",
+	"version": "1.5.14",
+	"main": "lib/index.js",
 	"license": "MIT",
 	"type": "commonjs",
 	"scripts": {
