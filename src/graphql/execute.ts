@@ -1,5 +1,6 @@
 import * as graphql from './data/queries.json';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosStatic, AxiosResponse } from 'axios';
+const axios = require('axios') as AxiosStatic;
 
 export default function execute<T>(
 	operationName: string,

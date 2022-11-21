@@ -87,7 +87,7 @@ export class ZvukAPI {
 		const {
 			data: { result },
 		} = await axios.get<Record<'result', release>>(
-			`https://zvuk.com/api/playlist/${id}`
+			`https://zvuk.com/api/release/${id}`
 		);
 
 		const release = result.releases[result.releaseId];
