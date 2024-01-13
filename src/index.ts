@@ -1,122 +1,68 @@
+import axios, { AxiosInstance, CreateAxiosDefaults } from 'axios';
 import execute from './graphql/execute';
-import { playlist, release, search } from './interfaces/api';
-import { getStream, getTracks, Response } from './interfaces/graphql';
-import { parseRelease, parseTrack } from './util';
-import * as util from './util';
-import { AxiosInstance, AxiosProxyConfig, AxiosStatic } from 'axios';
-const axios = require('axios') as AxiosStatic;
+import { Operation } from './interfaces/graphql';
 
-interface ZvukOptions {
-	proxy?: AxiosProxyConfig | false;
+export enum Quality {
+    High,
+    Middle,
 }
 
-export const graphql = { execute };
-export { util };
-
 export class ZvukAPI {
-	private token: string;
-	private client: AxiosInstance;
+    private token: string;
+    private client: AxiosInstance;
 
-	constructor(token: string, options: ZvukOptions = {}) {
-		if (typeof token !== 'string' || token.length === 0)
-			throw new Error('Token is required, but not provided!');
-		this.token = token;
-		this.client = axios.create({
-			...options,
-			headers: {
-				'Content-Type': 'application/json',
-				'x-auth-token': this.token,
-			},
-		});
-	}
+    constructor(token: string, axiosOptions: CreateAxiosDefaults = {}) {
+        if (typeof token !== 'string' || token.length === 0) throw new Error('A token is required but not provided!');
 
-	async search(query: string) {
-		const {
-			data: { result },
-		} = await this.client.get<Record<'result', search>>(
-			'http://zvuk.com/api/search',
-			{ params: { query } }
-		);
+        this.token = token;
+        this.client = axios.create({
+            ...axiosOptions,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Auth-Token': this.token,
+            },
+        });
+    }
 
-		return {
-			artists: result.artistIds.map((artistId) => result.artists[artistId]),
-			tracks: result.trackIds
-				.map((trackId) => result.tracks[trackId])
-				.map((track) =>
-					parseTrack(track, result.names, result.releases, result.labels)
-				),
-			albums: result.releaseIds
-				.map((releaseId) => result.releases[releaseId])
-				.map((release) =>
-					parseRelease(
-						release,
-						result.releases,
-						result.tracks,
-						result.names,
-						result.labels
-					)
-				),
-		};
-	}
+    static async getAnonymousToken() {
+        const { data } = await axios.get<{ result: { id: number; is_anonymous: boolean; token: string } }>('https://zvuk.com/api/tiny/profile');
 
-	async getStreamURL(trackId: number) {
-		const { data: response } = await execute<
-			Response<'mediaContents', Record<'stream', getStream.Stream>>
-		>(
-			'getStream',
-			{ ids: [trackId] },
-			{ token: this.token, axiosInstance: this.client }
-		);
+        return data.result.token;
+    }
 
-		const { stream } = response.data.mediaContents[0];
+    async search(query: string, limit: number = 10) {
+        const { data } = await execute(Operation.GetSearch, { query, limit }, this.client);
 
-		return stream.high ?? stream.mid;
-	}
+        return data.quickSearch.content;
+    }
 
-	async getTrack(id: number) {
-		const { data: response } = await execute<
-			Response<'getTracks', getTracks.Track>
-		>(
-			'getTracks',
-			{ withReleases: true, withArtists: true, ids: [id] },
-			{ token: this.token, axiosInstance: this.client }
-		);
+    async getStreamURL(trackId: number | number[], quality?: Quality) {
+        const { data } = await execute(Operation.GetStream, { ids: Array.isArray(trackId) ? trackId : [trackId] }, this.client);
 
-		return response.data.getTracks[0];
-	}
+        return data.mediaContents.map(({ stream }) => {
+            if (quality == Quality.High) {
+                if (!stream.high) throw new ReferenceError("The high quality of the track is missing! Perhaps you don't have a subscription?");
+                else return stream.high;
+            } else if (quality == Quality.Middle) return stream.mid;
+            else return stream.high ?? stream.mid;
+        });
+    }
 
-	async getPlaylist(id: number) {
-		const {
-			data: { result },
-		} = await this.client.get<Record<'result', playlist>>(
-			`http://zvuk.com/api/playlist/${id}`
-		);
+    async getTracks(id: number | number[], withArtists: boolean = false, withRelease: boolean = false) {
+        const { data } = await execute(Operation.GetFullTrack, { withReleases: withRelease, withArtists, ids: Array.isArray(id) ? id : [id] }, this.client);
 
-		return {
-			author: result.users[result.playlistUserId],
-			information: result.playlists[result.playlistId],
-			tracks: result.trackIds
-				.map((trackId) => result.tracks[trackId])
-				.map((track) =>
-					parseTrack(track, result.names, result.releases, result.labels)
-				),
-		};
-	}
+        return data.getTracks;
+    }
 
-	async getAlbum(id: number) {
-		const {
-			data: { result },
-		} = await this.client.get<Record<'result', release>>(
-			`http://zvuk.com/api/release/${id}`
-		);
+    async getPlaylists(id: number | number[]) {
+        const { data } = await execute(Operation.GetPlaylists, { ids: Array.isArray(id) ? id : [id] }, this.client);
 
-		const release = result.releases[result.releaseId];
-		return parseRelease(
-			release,
-			result.releases,
-			result.tracks,
-			result.names,
-			result.labels
-		);
-	}
+        return data.playlists;
+    }
+
+    async getAlbum(id: number, withArtists: boolean = false, withTracks: boolean = false) {
+        const { data } = await execute(Operation.GetReleases, { withArtists, withTracks, ids: Array.isArray(id) ? id : [id] }, this.client);
+
+        return data.getReleases;
+    }
 }

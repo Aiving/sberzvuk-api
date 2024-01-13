@@ -1,39 +1,46 @@
 {
-	"name": "sberzvuk-api",
-	"description": "Библиотека для взаимодействия с API музыкальной платформы «СберЗвук»",
-	"version": "1.6.2",
-	"main": "lib/index.js",
-	"license": "MIT",
-	"type": "commonjs",
-	"scripts": {
-		"build": "tsc"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Aiving/sberzvuk-api"
-	},
-	"keywords": [
-		"sber",
-		"sberzvuk",
-		"zvuk",
-		"сбер",
-		"сберзвук",
-		"звук",
-		"api"
-	],
-	"author": "Aiving",
-	"bugs": {
-		"url": "https://github.com/Aiving/sberzvuk-api/issues"
-	},
-	"homepage": "https://github.com/Aiving/sberzvuk-api#readme",
-	"files": [
-		"lib/**/*"
-	],
-	"dependencies": {
-		"axios": "^1.1.3"
-	},
-	"devDependencies": {
-		"@types/node": "^18.11.9",
-		"typescript": "^4.9.3"
-	}
+    "name": "sberzvuk-api",
+    "description": "Библиотека для взаимодействия с API музыкальной платформы «СберЗвук»",
+    "packageManager": "yarn@4.0.2",
+    "version": "2.1.5",
+    "main": "lib/index.js",
+    "license": "MIT",
+    "type": "commonjs",
+    "scripts": {
+        "lint": "tsc --noEmit -p .",
+        "build:dev": "swc src -d lib -w",
+        "build": "swc src -d lib"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Aiving/sberzvuk-api"
+    },
+    "keywords": [
+        "sber",
+        "sberzvuk",
+        "zvuk",
+        "сбер",
+        "сберзвук",
+        "звук",
+        "api"
+    ],
+    "author": "Aiving",
+    "bugs": {
+        "url": "https://github.com/Aiving/sberzvuk-api/issues"
+    },
+    "homepage": "https://github.com/Aiving/sberzvuk-api#readme",
+    "files": [
+        "lib/**/*"
+    ],
+    "devDependencies": {
+        "@swc/cli": "^0.1.63",
+        "@swc/core": "^1.3.102",
+        "@types/node": "^20.11.0",
+        "chokidar": "^3.5.3",
+        "typescript": "^5.3.3"
+    },
+    "dependencies": {
+        "axios": "^1.6.5",
+        "graphql": "^16.8.1"
+    }
 }

@@ -1,36 +1,29 @@
-import * as graphql from './data/queries.json';
-import { AxiosStatic, AxiosResponse, AxiosInstance } from 'axios';
-const axios = require('axios') as AxiosStatic;
+import { Operation, Response } from '../interfaces/graphql';
 
-interface ExecuteOptions {
-	token: string;
-	axiosInstance?: AxiosInstance;
-}
+import { schema as getFullTrack } from './data/getFullTrack';
+import { schema as getPlaylists } from './data/getPlaylists';
+import { schema as getReleases } from './data/getReleases';
+import { schema as getSearch } from './data/getSearch';
+import { schema as getStream } from './data/getStream';
+import { schema as getTracks } from './data/getTracks';
 
-export default function execute<T>(
-	operationName: string,
-	variables: Record<string, any>,
-	options: ExecuteOptions
-): Promise<AxiosResponse<T>> {
-	const query = Object.entries(graphql).find(
-		([name, _]) => name === operationName
-	);
-	if (!query) throw ReferenceError('Operation not found');
+import { AxiosInstance } from 'axios';
 
-	return (options.axiosInstance ?? axios).post<T>(
-		'http://zvuk.com/api/v1/graphql',
-		{
-			operationName,
-			variables,
-			query: query[1],
-		},
-		options.axiosInstance
-			? {
-					headers: {
-						'Content-Type': 'application/json',
-						'x-auth-token': options.token,
-					},
-			  }
-			: {}
-	);
+export default function execute<K extends Operation>(operationName: K, variables: Record<string, any>, axios: AxiosInstance) {
+    const query = Object.entries({
+        getFullTrack,
+        getPlaylists,
+        getReleases,
+        getSearch,
+        getStream,
+        getTracks,
+    }).find(([name, _]) => name === operationName);
+
+    if (!query) throw ReferenceError('Operation not found');
+
+    return axios.post<Response<K>>('http://zvuk.com/api/v1/graphql', {
+        operationName,
+        variables,
+        query: query[1].loc!.source.body,
+    }).then((response) => response.data);
 }

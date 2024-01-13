@@ -1,13 +1,15 @@
 {
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "CommonJS",
-		"declaration": true,
-		"outDir": "./lib",
+		"esModuleInterop": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
 		"strict": true,
-        "resolveJsonModule": true,
-		"esModuleInterop": false
+		"noImplicitAny": false,
+		"target": "ESNext",
+		"baseUrl": "src",
+		"outDir": "lib",
+		"resolveJsonModule": true
 	},
-	"include": ["src"],
-	"exclude": ["node_modules", "**/__tests__/*"]
+	"include": ["src/**/*"],
+	"exclude": ["lib"]
 }

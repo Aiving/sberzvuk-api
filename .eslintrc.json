@@ -1,12 +1,12 @@
 {
-  "plugins": ["prettier"],
-  "rules": {
-    "quotes": ["error", "single"],
-		"prettier/prettier": "off",
-		"jsx-quotes": ["error", "prefer-single"],
-		"react/jsx-curly-spacing": [2, "never"]
-  },
-  "parserOptions": {
-    "ecmaVersion": "latest"
-  }
+    "plugins": ["prettier"],
+    "rules": {
+        "quotes": ["error", "single"],
+        "prettier/prettier": "off",
+        "jsx-quotes": ["error", "prefer-single"],
+        "react/jsx-curly-spacing": [2, "never"]
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    }
 }
