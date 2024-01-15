@@ -48,8 +48,8 @@ export class ZvukAPI {
         });
     }
 
-    async getTracks(id: number | number[], withArtists: boolean = false, withRelease: boolean = false) {
-        const { data } = await execute(Operation.GetFullTrack, { withReleases: withRelease, withArtists, ids: Array.isArray(id) ? id : [id] }, this.client);
+    async getTrack(id: number | number[], withArtists: boolean = false, withAlbum: boolean = false) {
+        const { data } = await execute(Operation.GetFullTrack, { withReleases: withAlbum, withArtists, ids: Array.isArray(id) ? id : [id] }, this.client);
 
         return data.getTracks;
     }

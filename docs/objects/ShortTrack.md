@@ -13,4 +13,4 @@
 | explicit       | `boolean`                           |
 | lyrics         | `boolean \| null`                   |
 | artists        | [`ShortArtist[]`](./ShortArtist.md) |
-| release        | [`ShortRelease`](./ShortAlbum.md)   |
+| release        | [`ShortAlbum`](./ShortAlbum.md)   |
