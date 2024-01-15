@@ -30,7 +30,7 @@ export class ZvukAPI {
         return data.result.token;
     }
 
-    async search(query: string, limit: number = 10) {
+    async quickSearch(query: string, limit: number = 10) {
         const { data } = await execute(Operation.GetSearch, { query, limit }, this.client);
 
         return data.quickSearch.content;
@@ -54,7 +54,7 @@ export class ZvukAPI {
         return data.getTracks;
     }
 
-    async getPlaylists(id: number | number[]) {
+    async getPlaylist(id: number | number[]) {
         const { data } = await execute(Operation.GetPlaylists, { ids: Array.isArray(id) ? id : [id] }, this.client);
 
         return data.playlists;

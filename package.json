@@ -2,7 +2,7 @@
     "name": "sberzvuk-api",
     "description": "Библиотека для взаимодействия с API музыкальной платформы «СберЗвук»",
     "packageManager": "yarn@4.0.2",
-    "version": "2.1.6",
+    "version": "2.1.9",
     "main": "lib/index.js",
     "license": "MIT",
     "type": "commonjs",

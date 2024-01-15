@@ -1,6 +1,6 @@
 import { Artist } from './artist';
 import { Image } from './common';
-import { Release } from './release';
+import { Album } from './album';
 import { Track } from './track';
 
 export interface Playlist {
@@ -17,6 +17,6 @@ export interface Playlist {
     isDeleted: boolean;
     tracks: (Omit<Track, 'genres' | 'artists' | 'release'> & {
         artists: Pick<Artist, 'id' | 'title' | 'image'>[];
-        release: Pick<Release, 'id' | 'title' | 'image'>;
+        release: Pick<Album, 'id' | 'title' | 'image'>;
     })[];
 }

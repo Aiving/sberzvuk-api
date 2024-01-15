@@ -9,7 +9,7 @@ import { schema as getTracks } from './data/getTracks';
 
 import { AxiosInstance } from 'axios';
 
-export default function execute<K extends Operation>(operationName: K, variables: Record<string, any>, axios: AxiosInstance) {
+export default async function execute<K extends Operation>(operationName: K, variables: Record<string, any>, axios: AxiosInstance) {
     const query = Object.entries({
         getFullTrack,
         getPlaylists,
@@ -21,9 +21,11 @@ export default function execute<K extends Operation>(operationName: K, variables
 
     if (!query) throw ReferenceError('Operation not found');
 
-    return axios.post<Response<K>>('http://zvuk.com/api/v1/graphql', {
+    const response = await axios.post<Response<K>>('http://zvuk.com/api/v1/graphql', {
         operationName,
         variables,
         query: query[1].loc!.source.body,
-    }).then((response) => response.data);
+    });
+    
+    return response.data;
 }

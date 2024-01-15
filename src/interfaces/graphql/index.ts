@@ -2,7 +2,7 @@ import { Stream } from './stream';
 import { Playlist } from './playlist';
 import { Track } from './track';
 import { Artist } from './artist';
-import { Release } from './release';
+import { Album } from './album';
 import { Image } from './common';
 
 export enum Operation {
@@ -26,7 +26,7 @@ interface Name {
 interface Data {
     [Operation.GetFullTrack]: Track[];
     [Operation.GetPlaylists]: Playlist[];
-    [Operation.GetReleases]: Release[];
+    [Operation.GetReleases]: Album[];
     [Operation.GetSearch]: {
         content: (
             | {
@@ -36,7 +36,7 @@ interface Data {
                   title: string;
                   artistTemplate: string;
                   artistNames: string[];
-                  release: Pick<Release, 'image'>;
+                  release: Pick<Album, 'image'>;
               }
             | {
                   __typename: 'Artist';
@@ -67,7 +67,7 @@ interface Data {
     [Operation.GetStream]: Stream[];
     [Operation.GetTracks]: (Omit<Track, 'genres' | 'artists' | 'release'> & {
         artists: Pick<Artist, 'id' | 'title' | 'image'>[];
-        release: Pick<Release, 'id' | 'title' | 'image'>;
+        release: Pick<Album, 'id' | 'title' | 'image'>;
     })[];
 }
 

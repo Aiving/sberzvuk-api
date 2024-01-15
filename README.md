@@ -23,32 +23,22 @@ npm i sberzvuk-api
 yarn add sberzvuk-api
 ```
 
-## Методы
+## Пример использования
 
-> :warning: Все методы - асинхронные.
+```ts
+import { ZvukAPI } from 'sberzvuk-api';
 
-### `search(query: string, limit?: number)`
+const api = new ZvukAPI(ZvukAPI.getAnonymousToken());
 
-Ищет исполнителей, треки, альбомы и плейлисты.
-Значение по умолчанию для `limit` - 10.
+async function main() {
+    const data = await api.quickSearch('pyro');
 
-### `getTrack(id: number | number[], withArtists?: boolean, withRelease?: boolean)`
+    console.log(data);
+}
 
-Получает полную информацию о треке (или треках), включая исполнителей и альбом (опционально).
-Значение по умолчанию для `withArtists` и `withRelease` - false.
+void main();
+```
 
-### `getStreamURL(trackId: number | number[], quality?: Quality)`
+## Документация
 
-Получает ссылку на MP3-файл(-ы).
-По умолчанию автоматически выбирает самое высокое качество из доступных, однако вы можете это изменить, напрямую указав желаемое качество в параметре `quality`.
-
-> :warning: В случае отсутствия платной подписки на Звуке попытка получить файл высокого качества выдаст ошибку.
-
-### `getPlaylist(id: number | number[])`
-
-Получает информацию об плейлисте (или плейлистах) и треках в нём.
-
-### `getAlbum(id: number | number[], withArtists?: boolean, withTracks?: boolean)`
-
-Получает полную информацию об альбоме (или альбомах), включая исполнителей и треки (опционально).
-Значение по умолчанию для `withArtists` и `withTracks` - false.
+Располагается [здесь](./docs/README.md)

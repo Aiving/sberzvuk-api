@@ -1,6 +1,6 @@
 import { Genre } from './common';
 import { Artist } from './artist';
-import { Release } from './release';
+import { Album } from './album';
 
 export interface Track {
     id: string;
@@ -13,5 +13,5 @@ export interface Track {
     explicit: boolean;
     lyrics: boolean | null;
     artists?: Artist[];
-    release?: Omit<Release, "artists" | "tracks">;
+    release?: Omit<Album, "artists" | "tracks">;
 }
